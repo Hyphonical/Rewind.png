@@ -1,3 +1,4 @@
+<!-- filepath: c:\Users\joris\Desktop\Rewind.png\README.md -->
 # 🎵 Rewind.png
 
 > **Digital cassette tapes disguised as PNG images**
@@ -7,6 +8,20 @@ Rewind.png is an experimental media format that embeds lossless audio (FLAC/MP3/
 ![Version](https://img.shields.io/badge/version-0.3.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Rust](https://img.shields.io/badge/rust-1.70+-orange)
+
+---
+
+## 🎬 Demo
+
+<details>
+
+<summary><strong>📼 Click to view demo cassette</strong> (27.5 MB)</summary>
+
+![Demo Cassette](demo/Cassette.png)
+
+</details>
+
+**Try it:** `rewind tui demo/Cassette.png`
 
 ---
 
@@ -155,10 +170,39 @@ rewind tui mixtape.png
 - [ ] Cross-platform builds (Windows, macOS, Linux)
 
 ### 💭 Dream Features (v2.0+)
-- [ ] Web-based
+- [ ] Web-based player (WASM compilation)
+- [ ] Cassette sharing platform
+- [ ] Tape degradation effects (authentic lo-fi simulation)
 
-#### Notes
+---
 
-A great part of this project is created using various AI models, including Claude Sonnet & Opus, Gemini 3 Pro & Flash, and Grok Code Fast 1. Without these tools I would not have been able to create Rewind.png in this timeframe. In fact, I would still be writing the main.rs file manually to this day!
+## 📜 License & Attribution
 
-During playback, you might hear a bit of static, distortion, or glitches. I haven't figured out why yet, but it's on my to-do list!
+### Code
+This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for details.
+
+### Demo Content
+
+**Demo Cassette Image (`demo/Cassette.png`):**
+- Cover art © 2025 Hyphonical. Licensed under [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+- **You may:** Share and redistribute the image with proper attribution
+- **You may not:** Modify, remix, or create derivative works, or use it for commercial purposes.
+- The Sony® trademark shown on the demo cassette is used for aesthetic purposes only. Sony is a registered trademark of Sony Corporation. This project is not affiliated with, endorsed by, or sponsored by Sony Corporation.
+
+**Demo Audio Tracks:**  
+All tracks by **Kevin MacLeod** ([incompetech.com](https://incompetech.com)):
+- "Aquarium"
+- "Sugar Plum Breakdown"
+- "Hall of the Mountain King"
+
+Licensed under [Creative Commons: By Attribution 4.0 License](http://creativecommons.org/licenses/by/4.0/)
+
+---
+
+## 📝 Notes
+
+A great part of this project was created using various AI models, including Claude Sonnet & Opus, Gemini 3 Pro & Flash, and Grok Code Fast 1. Without these tools I would not have been able to create Rewind.png in this timeframe.
+
+---
+
+**Made with 💖**
