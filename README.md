@@ -4,7 +4,7 @@
 
 Rewind.png is an experimental media format that embeds lossless audio (FLAC/MP3/OGG/WAV) inside PNG images without corrupting the visual data. Think of it as a modern cassette tape; The PNG is the box art, and the embedded audio is the music inside.
 
-![Version](https://img.shields.io/badge/version-0.1.0-blue)
+![Version](https://img.shields.io/badge/version-0.2.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Rust](https://img.shields.io/badge/rust-1.70+-orange)
 
@@ -107,12 +107,12 @@ rewind play mixtape.png
 
 ## 🗺️ Roadmap
 
-### ✅ Version 0.1 (Current)
+### ✅ Version 0.1 (Completed)
 - [x] Record audio into PNG images
 - [x] Inspect cassette metadata & verify integrity
 - [x] Random track playback (CLI-ish)
 
-### 🚧 Version 0.2 (Next)
+### 🚧 Version 0.2 (Completed)
 - [x] CLI argument parsing (`clap`)
   - [x] `rewind record <image> <audio...> -o <output>`
   - [x] `rewind inspect <cassette>`
@@ -122,7 +122,7 @@ rewind play mixtape.png
 - [x] Track extraction (`rewind extract <cassette> <track_number> -o output.flac`)
 - [x] Better error messages (user-friendly)
 
-### 🔮 Version 0.3 (Future)
+### 🔮 Version 0.3
 - [ ] **Terminal UI (TUI)** with `ratatui`
   - [ ] Interactive track selection (arrow keys)
   - [ ] Progress bar + metadata display
@@ -130,7 +130,7 @@ rewind play mixtape.png
 - [ ] Playlist support (queue multiple cassettes)
 - [ ] Metadata editing (update tags without re-encoding)
 
-### 🌐 Version 1.0 (Long-term)
+### 🌐 Version 1.0
 - [ ] **Desktop GUI** (Tauri + Web UI)
   - [ ] Drag-and-drop cassette loading
   - [ ] Cover art display

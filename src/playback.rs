@@ -162,7 +162,7 @@ pub fn play_all(path: &str) {
 	log(LogLevel::Info, "Press Ctrl+C to stop.");
 
 	for i in 0..entries.len() {
-		log(LogLevel::Info, &format!("\n━━━ Track {} of {} ━━━", i + 1, entries.len()));
+		log(LogLevel::Info, &format!("━━━ Track {} of {} ━━━", i + 1, entries.len()));
 		
 		if !play_track(&mut file, &entries, &offsets, i, false) {
 			break;

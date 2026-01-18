@@ -12,4 +12,4 @@ pub const IEND_CHUNK: [u8; 12] = [
 	0xAE, 0x42, 0x60, 0x82
 ];
 
-pub const BUFFER_SIZE: usize = 8192;
+pub const BUFFER_SIZE: usize = 16384;
