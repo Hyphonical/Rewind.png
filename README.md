@@ -4,7 +4,7 @@
 
 Rewind.png is an experimental media format that embeds lossless audio (FLAC/MP3/OGG/WAV) inside PNG images without corrupting the visual data. Think of it as a modern cassette tape; The PNG is the box art, and the embedded audio is the music inside.
 
-![Version](https://img.shields.io/badge/version-0.2.0-blue)
+![Version](https://img.shields.io/badge/version-0.3.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Rust](https://img.shields.io/badge/rust-1.70+-orange)
 
@@ -103,6 +103,23 @@ rewind play mixtape.png
 [00:00:00] 𝒊  Press Ctrl+C to stop.
 ```
 
+### 4. Interactive TUI Player (NEW in v0.3!)
+Open the full-featured terminal player:
+
+```bash
+rewind tui mixtape.png
+```
+
+**Controls:**
+| Key | Action |
+|-----|--------|
+| ↑/↓ or j/k | Navigate tracks |
+| Enter | Play selected track |
+| Space | Pause/Resume |
+| ←/→ or p/n | Previous/Next track |
+| S | Stop playback |
+| Q or Esc | Quit |
+
 ---
 
 ## 🗺️ Roadmap
@@ -122,13 +139,11 @@ rewind play mixtape.png
 - [x] Track extraction (`rewind extract <cassette> <track_number> -o output.flac`)
 - [x] Better error messages (user-friendly)
 
-### 🔮 Version 0.3
-- [ ] **Terminal UI (TUI)** with `ratatui`
-  - [ ] Interactive track selection (arrow keys)
-  - [ ] Progress bar + metadata display
-  - [ ] Keyboard shortcuts (Space = play/pause, etc.)
-- [ ] Playlist support (queue multiple cassettes)
-- [ ] Metadata editing (update tags without re-encoding)
+### 🔮 Version 0.3 (Completed)
+- [x] **Terminal UI (TUI)** with `ratatui`
+  - [x] Interactive track selection (arrow keys)
+  - [x] Progress bar + metadata display
+  - [x] Keyboard shortcuts (Space = play/pause, etc.)
 
 ### 🌐 Version 1.0
 - [ ] **Desktop GUI** (Tauri + Web UI)
@@ -144,4 +159,6 @@ rewind play mixtape.png
 
 #### Notes
 
-A great part of this project is created using various AI models, including Claude Sonnet & Opus, Gemini 3 Pro & Flash, and Grok Code Fast 1. Without these tools I would not have been able to create Rewind.png in this timeframe.
+A great part of this project is created using various AI models, including Claude Sonnet & Opus, Gemini 3 Pro & Flash, and Grok Code Fast 1. Without these tools I would not have been able to create Rewind.png in this timeframe. In fact, I would still be writing the main.rs file manually to this day!
+
+During playback, you might hear a bit of static, distortion, or glitches. I haven't figured out why yet, but it's on my to-do list!
