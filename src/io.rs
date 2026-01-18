@@ -14,12 +14,12 @@ use crate::constants::{IEND_CHUNK, BUFFER_SIZE};
 
 /// Opens a file with a descriptive error message on failure.
 pub fn open_file(path: &str) -> Result<File, String> {
-	File::open(path).map_err(|e| format!("Failed to open '{}': {}", path, e))
+	File::open(path).map_err(|e| format!("Cassette not found in the deck: {} ({})", path, e))
 }
 
 /// Creates a file with a descriptive error message on failure.
 pub fn create_file(path: &str) -> Result<File, String> {
-	File::create(path).map_err(|e| format!("Failed to create '{}': {}", path, e))
+	File::create(path).map_err(|e| format!("Cannot create output file '{}': {}", path, e))
 }
 
 /// Copies all bytes from reader to writer, updating the hasher. Returns bytes written.
@@ -78,9 +78,9 @@ pub fn validate_audio(file: &mut File) -> Result<(), String> {
 	file.rewind().map_err(|e| e.to_string())?;
 	Probe::new(&mut *file)
 		.guess_file_type()
-		.map_err(|_| "Unknown format".to_string())?
+		.map_err(|_| "This doesn't sound like music. Unknown format.".to_string())?
 		.read()
-		.map_err(|_| "Invalid or corrupt audio".to_string())?;
+		.map_err(|_| "This audio file is damaged or corrupted.".to_string())?;
 	file.rewind().map_err(|e| e.to_string())?;
 	Ok(())
 }

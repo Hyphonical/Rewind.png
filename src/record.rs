@@ -26,7 +26,7 @@ pub fn record(image_path: &str, audio_paths: &[&str], output_path: &str) {
 		};
 
 		if let Err(e) = validate_audio(&mut file) {
-			log(LogLevel::Error, &format!("{}: {}", path, e));
+			log(LogLevel::Error, &format!("'{}' rejected: {}", path, e));
 			return;
 		}
 
@@ -51,10 +51,10 @@ pub fn record(image_path: &str, audio_paths: &[&str], output_path: &str) {
 
 	// 3. Copy image
 	if let Err(e) = transfer(&mut BufReader::new(&mut image_in), &mut writer, &mut hasher) {
-		log(LogLevel::Error, &format!("Image copy failed: {}", e));
+		log(LogLevel::Error, &format!("Failed to copy cover art: {}", e));
 		return;
 	}
-	log(LogLevel::Info, "Image copied.");
+	log(LogLevel::Info, "Cover art transferred.");
 
 	// 4. Build and write TOC
 	let mut toc = Vec::new();
@@ -72,14 +72,14 @@ pub fn record(image_path: &str, audio_paths: &[&str], output_path: &str) {
 	// 5. Append audio data
 	for (mut file, name, _) in audio_files {
 		if let Err(e) = transfer(&mut BufReader::new(&mut file), &mut writer, &mut hasher) {
-			log(LogLevel::Error, &format!("Audio copy failed ({}): {}", name, e));
+			log(LogLevel::Error, &format!("Failed to record track '{}': {}", name, e));
 			return;
 		}
-		log(LogLevel::Info, &format!("Appended: {}", name));
+		log(LogLevel::Info, &format!("Recorded: {}", name));
 	}
 
 	// 6. Write CRC
 	let crc = hasher.finalize();
 	writer.write_all(&crc.to_le_bytes()).unwrap();
-	log(LogLevel::Success, &format!("Injection complete. CRC32: {:08X}", crc));
+	log(LogLevel::Success, &format!("🎵 Cassette recording complete! Sealed with CRC32: {:08X}", crc));
 }

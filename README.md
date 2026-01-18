@@ -113,13 +113,14 @@ rewind play mixtape.png
 - [x] Random track playback (CLI-ish)
 
 ### 🚧 Version 0.2 (Next)
-- [ ] CLI argument parsing (`clap`)
-  - [ ] `rewind record <image> <audio...> -o <output>`
-  - [ ] `rewind inspect <cassette>`
-  - [ ] `rewind play <cassette> [--track N]`
-- [ ] Sequential playback (play all tracks)
-- [ ] Track extraction (`rewind extract <cassette> <track_number> -o output.flac`)
-- [ ] Better error messages (user-friendly)
+- [x] CLI argument parsing (`clap`)
+  - [x] `rewind record <image> <audio...> -o <output>`
+  - [x] `rewind inspect <cassette>`
+  - [x] `rewind play <cassette> [--track N]`
+  - [x] `rewind extract <cassette> <track_number> -o output.flac`
+- [x] Sequential playback (play all tracks)
+- [x] Track extraction (`rewind extract <cassette> <track_number> -o output.flac`)
+- [x] Better error messages (user-friendly)
 
 ### 🔮 Version 0.3 (Future)
 - [ ] **Terminal UI (TUI)** with `ratatui`
@@ -140,3 +141,7 @@ rewind play mixtape.png
 
 ### 💭 Dream Features (v2.0+)
 - [ ] Web-based
+
+#### Notes
+
+A great part of this project is created using various AI models, including Claude Sonnet & Opus, Gemini 3 Pro & Flash, and Grok Code Fast 1. Without these tools I would not have been able to create Rewind.png in this timeframe.

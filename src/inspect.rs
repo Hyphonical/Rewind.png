@@ -30,7 +30,7 @@ pub fn inspect(path: &str) {
 
 	let file_len = file.metadata().map(|m| m.len()).unwrap_or(0);
 	if file_len < 4 {
-		log(LogLevel::Error, "File too small.");
+		log(LogLevel::Error, "This file is too small to be a valid cassette.");
 		return;
 	}
 
@@ -44,15 +44,16 @@ pub fn inspect(path: &str) {
 	let stored_crc = u32::from_le_bytes(crc_buf);
 
 	if hasher.finalize() != stored_crc {
-		log(LogLevel::Error, "Checksum does not match! The file may be corrupted.");
+		log(LogLevel::Error, "This cassette has been damaged! Checksum mismatch detected.");
+		log(LogLevel::Error, "The file may have been compressed or tampered with.");
 		return;
 	}
-	log(LogLevel::Success, "Checksum matches. The file is intact.");
+	log(LogLevel::Success, "Cassette integrity verified. The tape is intact.");
 
 	// 2. Find TOC position
 	let toc_pos = match find_iend(&mut file) {
 		Some(pos) => pos,
-		None => { log(LogLevel::Error, "No IEND chunk found."); return; }
+		None => { log(LogLevel::Error, "This doesn't look like a valid cassette. No PNG structure found."); return; }
 	};
 
 	// 3. Read TOC
