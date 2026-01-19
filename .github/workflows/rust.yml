@@ -14,6 +14,7 @@ jobs:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
@@ -28,10 +29,6 @@ jobs:
             target: x86_64-apple-darwin
             binary_name: rewind
             artifact_name: rewind-macos-x86_64
-          - os: macos-latest
-            target: aarch64-apple-darwin
-            binary_name: rewind
-            artifact_name: rewind-macos-aarch64
 
     steps:
     - uses: actions/checkout@v4
