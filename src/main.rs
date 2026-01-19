@@ -54,22 +54,22 @@ mod io;
 mod record;
 mod inspect;
 mod playback;
-mod extract;
 mod tui;
+mod gui;
 
 use clap::{Parser, Subcommand};
 use record::record;
 use inspect::inspect;
 use playback::{play_random, play_all};
-use extract::extract;
 use tui::run_tui;
+use gui::run_gui;
 use crate::logger::{log, LogLevel};
 use colored::*;
 
 /// Digital cassette tapes disguised as PNG images
 #[derive(Parser)]
 #[command(name = "rewind")]
-#[command(version = "0.3.0")]
+#[command(version = "0.4.0")]
 #[command(about = "Embed and play audio from PNG images", long_about = None)]
 struct Cli {
 	#[command(subcommand)]
@@ -112,21 +112,14 @@ enum Commands {
 		all: bool,
 	},
 
-	/// Extract a track from the cassette
-	Extract {
-		/// Path to the cassette file
-		cassette: String,
-
-		/// Track number to extract (1-based index)
-		track: usize,
-
-		/// Output file path
-		#[arg(short, long)]
-		output: String,
-	},
-
 	/// Open the interactive TUI player
 	Tui {
+		/// Path to the cassette file
+		cassette: String,
+	},
+
+	/// Open the desktop GUI player (v0.4.0)
+	Gui {
 		/// Path to the cassette file
 		cassette: String,
 	},
@@ -158,12 +151,14 @@ fn main() {
 			}
 		}
 
-		Commands::Extract { cassette, track, output } => {
-			extract(&cassette, track, &output);
-		}
-
 		Commands::Tui { cassette } => {
 			if let Err(e) = run_tui(&cassette) {
+				log(LogLevel::Error, &e);
+			}
+		}
+
+		Commands::Gui { cassette } => {
+			if let Err(e) = run_gui(&cassette) {
 				log(LogLevel::Error, &e);
 			}
 		}

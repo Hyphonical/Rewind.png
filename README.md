@@ -5,7 +5,7 @@
 
 Rewind.png is an experimental media format that embeds lossless audio (FLAC/MP3/OGG/WAV) inside PNG images without corrupting the visual data. Think of it as a modern cassette tape; The PNG is the box art, and the embedded audio is the music inside.
 
-![Version](https://img.shields.io/badge/version-0.3.0-blue)
+![Version](https://img.shields.io/badge/version-0.5.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Rust](https://img.shields.io/badge/rust-1.70+-orange)
 
@@ -15,7 +15,7 @@ Rewind.png is an experimental media format that embeds lossless audio (FLAC/MP3/
 
 <details>
 
-<summary><strong>📼 Click to view demo cassette</strong> (27.5 MB)</summary>
+<summary><strong>📼 Click to view the demo cassette</strong> (27.5 MB)</summary>
 
 ![Demo Cassette](demo/Cassette.png)
 
@@ -76,6 +76,11 @@ cargo build --release
 
 Binary will be in `target/release/rewind`
 
+### System Requirements
+- **OS**: Windows 10+, macOS 10.15+, or Linux (any modern distro)
+- **Terminal**: Unicode support recommended for TUI (Windows Terminal, iTerm2, etc.)
+- **Audio**: Working audio output device
+
 ---
 
 ## 🚀 Usage
@@ -118,61 +123,92 @@ rewind play mixtape.png
 [00:00:00] 𝒊  Press Ctrl+C to stop.
 ```
 
-### 4. Interactive TUI Player (NEW in v0.3!)
-Open the full-featured terminal player:
+### 4. Interactive TUI Player (NEW in v0.5!)
+Open the full-featured skeuomorphic cassette player:
 
 ```bash
 rewind tui mixtape.png
 ```
 
-**Controls:**
+**Features:**
+- 🎨 **Vintage cassette design** with animated progress bar and spinning reels
+- 🖱️ **Mouse support** - click buttons directly or select tracks
+- 🔊 **Volume control** with visual slider (0-100%)
+- 📜 **Dynamic playlist** that auto-sizes based on track count
+- ⏯️ **Full playback controls** with visual feedback
+
+**Keyboard Controls:**
 | Key | Action |
 |-----|--------|
 | ↑/↓ or j/k | Navigate tracks |
 | Enter | Play selected track |
 | Space | Pause/Resume |
 | ←/→ or p/n | Previous/Next track |
+| +/- | Volume up/down |
 | S | Stop playback |
 | Q or Esc | Quit |
+
+**Mouse Controls:**
+- Click on any button (⏮ ▶ ⏸ ■ ⏭) to control playback
+- Click on a track in the playlist to play it
+- Click volume buttons to adjust audio level
+
+> **Note:** Your terminal must support Unicode box-drawing characters and mouse input for the best experience.
 
 ---
 
 ## 🗺️ Roadmap
 
-### ✅ Version 0.1 (Completed)
-- [x] Record audio into PNG images
+### ✅ Version 0.1 - Foundation (Completed)
+- [x] Core polyglot PNG/audio embedding
+- [x] Record audio tracks into PNG images
 - [x] Inspect cassette metadata & verify integrity
-- [x] Random track playback (CLI-ish)
+- [x] Basic CLI playback
 
-### 🚧 Version 0.2 (Completed)
-- [x] CLI argument parsing (`clap`)
+### ✅ Version 0.2 - CLI Refinement (Completed)
+- [x] Structured CLI with `clap`
   - [x] `rewind record <image> <audio...> -o <output>`
   - [x] `rewind inspect <cassette>`
   - [x] `rewind play <cassette> [--track N]`
-  - [x] `rewind extract <cassette> <track_number> -o output.flac`
-- [x] Sequential playback (play all tracks)
-- [x] Track extraction (`rewind extract <cassette> <track_number> -o output.flac`)
-- [x] Better error messages (user-friendly)
+- [x] Sequential playback (auto-advance tracks)
+- [x] Improved error handling and user feedback
 
-### 🔮 Version 0.3 (Completed)
-- [x] **Terminal UI (TUI)** with `ratatui`
-  - [x] Interactive track selection (arrow keys)
-  - [x] Progress bar + metadata display
-  - [x] Keyboard shortcuts (Space = play/pause, etc.)
+### ✅ Version 0.3 - Basic TUI (Completed)
+- [x] Terminal UI with `ratatui`
+- [x] Interactive track selection
+- [x] Progress bar + metadata display
+- [x] Keyboard navigation
 
-### 🌐 Version 1.0
-- [ ] **Desktop GUI** (Tauri + Web UI)
-  - [ ] Drag-and-drop cassette loading
-  - [ ] Cover art display
-  - [ ] Skeuomorphic cassette player UI
-- [ ] Cassette library (recently played tapes)
-- [ ] Export cassettes to ZIP (image + audio files)
-- [ ] Cross-platform builds (Windows, macOS, Linux)
+### ✅ Version 0.4 - Enhanced Playback (Completed)
+- [x] Improved audio handling with `rodio`
+- [x] Track metadata extraction (artist, title, duration)
+- [x] CRC32 integrity verification
+- [x] Pause/resume functionality
 
-### 💭 Dream Features (v2.0+)
-- [ ] Web-based player (WASM compilation)
-- [ ] Cassette sharing platform
-- [ ] Tape degradation effects (authentic lo-fi simulation)
+### ✅ Version 0.5 - Skeuomorphic TUI (Current)
+- [x] Complete UI redesign with vintage cassette aesthetics
+- [x] Mouse support (clickable buttons)
+- [x] Volume control with visual slider
+- [x] Dynamic playlist sizing
+- [x] Auto-play next track
+
+---
+
+### 🚧 Version 0.6 - Polish & Distribution (Planned)
+- [ ] Pre-built binaries for Windows, macOS, Linux
+- [ ] Installer/package manager support
+- [ ] Configuration file support (default volume, theme)
+- [ ] Error recovery (handle corrupted tracks gracefully)
+
+### 🎯 Version 1.0 - Desktop GUI (Future)
+- [ ] Native desktop app with Tauri
+- [ ] Drag-and-drop cassette loading
+- [ ] Visual cover art display
+- [ ] Cassette library (recently played)
+
+### 🌟 Version 2.0+ - Advanced Features (Dreams)
+- [ ] Web-based player (WASM)
+- [ ] Multi-cassette mixtapes
 
 ---
 
