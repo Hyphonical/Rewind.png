@@ -195,7 +195,7 @@ rewind tui mixtape.png
 ---
 
 ### 🚧 Version 0.6 - Polish & Distribution (Planned)
-- [ ] Pre-built binaries for Windows, macOS, Linux
+- [x] Pre-built binaries for Windows, macOS, Linux
 - [ ] Installer/package manager support
 - [ ] Configuration file support (default volume, theme)
 - [ ] Error recovery (handle corrupted tracks gracefully)
