@@ -19,3 +19,6 @@ gag = "1.0"
 
 # GUI dependencies (Dioxus desktop)
 dioxus = { version = "0.6", features = ["desktop"] }
+
+# File picker
+rfd = "0.17.2"

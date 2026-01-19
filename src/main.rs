@@ -65,6 +65,7 @@ use tui::run_tui;
 use gui::run_gui;
 use crate::logger::{log, LogLevel};
 use colored::*;
+use rfd::FileDialog;
 
 /// Digital cassette tapes disguised as PNG images
 #[derive(Parser)]
@@ -100,8 +101,8 @@ enum Commands {
 
 	/// Play a track from the cassette
 	Play {
-		/// Path to the cassette file
-		cassette: String,
+		/// Path to the cassette file (opens file picker if not provided)
+		cassette: Option<String>,
 
 		/// Track number to play (if not specified, plays random track)
 		#[arg(short, long)]
@@ -114,15 +115,40 @@ enum Commands {
 
 	/// Open the interactive TUI player
 	Tui {
-		/// Path to the cassette file
-		cassette: String,
+		/// Path to the cassette file (opens file picker if not provided)
+		cassette: Option<String>,
 	},
 
 	/// Open the desktop GUI player (v0.4.0)
 	Gui {
-		/// Path to the cassette file
-		cassette: String,
+		/// Path to the cassette file (opens file picker if not provided)
+		cassette: Option<String>,
 	},
+}
+
+/// Opens a native file picker to select a PNG cassette file.
+/// Returns None if the user cancels or no file is selected.
+fn pick_cassette() -> Option<String> {
+	FileDialog::new()
+		.add_filter("PNG Cassettes", &["png"])
+		.set_title("Select a Rewind.png Cassette")
+		.pick_file()
+		.map(|p| p.to_string_lossy().to_string())
+}
+
+/// Gets the cassette path from argument or opens file picker.
+/// Returns None if no cassette was provided or selected.
+fn get_cassette_path(cassette: Option<String>) -> Option<String> {
+	if let Some(path) = cassette {
+		Some(path)
+	} else {
+		log(LogLevel::Info, "No cassette provided. Opening file picker...");
+		let picked = pick_cassette();
+		if picked.is_none() {
+			log(LogLevel::Warning, "No cassette selected. Exiting.");
+		}
+		picked
+	}
 }
 
 fn main() {
@@ -141,24 +167,27 @@ fn main() {
 		}
 
 		Commands::Play { cassette, track, all } => {
+			let Some(path) = get_cassette_path(cassette) else { return };
 			if all {
-				play_all(&cassette);
+				play_all(&path);
 			} else if let Some(_track_num) = track {
 				log(LogLevel::Warning, "Track selection not yet implemented. Playing random track.");
-				play_random(&cassette);
+				play_random(&path);
 			} else {
-				play_random(&cassette);
+				play_random(&path);
 			}
 		}
 
 		Commands::Tui { cassette } => {
-			if let Err(e) = run_tui(&cassette) {
+			let Some(path) = get_cassette_path(cassette) else { return };
+			if let Err(e) = run_tui(&path) {
 				log(LogLevel::Error, &e);
 			}
 		}
 
 		Commands::Gui { cassette } => {
-			if let Err(e) = run_gui(&cassette) {
+			let Some(path) = get_cassette_path(cassette) else { return };
+			if let Err(e) = run_gui(&path) {
 				log(LogLevel::Error, &e);
 			}
 		}
