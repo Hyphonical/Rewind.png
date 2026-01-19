@@ -88,7 +88,7 @@ pub struct App {
 	pub is_playing: Arc<AtomicBool>,
 	pub is_paused: Arc<AtomicBool>,
 	pub playback_generation: Arc<AtomicU64>,
-	pub volume: Arc<AtomicU8>, // 0-4 (maps to 0%, 25%, 50%, 75%, 100%)
+	pub volume: Arc<AtomicU8>, // 0-100 (percentage)
 	pub playlist_scroll: usize,
 }
 
@@ -113,7 +113,7 @@ impl App {
 			is_playing: Arc::new(AtomicBool::new(false)),
 			is_paused: Arc::new(AtomicBool::new(false)),
 			playback_generation: Arc::new(AtomicU64::new(0)),
-			volume: Arc::new(AtomicU8::new(4)), // Start at 100%
+			volume: Arc::new(AtomicU8::new(80)), // Default volume 80%
 			playlist_scroll: 0,
 		})
 	}
@@ -287,8 +287,8 @@ impl App {
 	/// Increase volume
 	pub fn volume_up(&mut self) {
 		let current = self.volume.load(Ordering::SeqCst);
-		if current < 4 {
-			self.volume.store(current + 1, Ordering::SeqCst);
+		if current < 100 {
+			self.volume.store((current + 10).min(100), Ordering::SeqCst);
 			self.apply_volume();
 		}
 	}
@@ -297,14 +297,14 @@ impl App {
 	pub fn volume_down(&mut self) {
 		let current = self.volume.load(Ordering::SeqCst);
 		if current > 0 {
-			self.volume.store(current - 1, Ordering::SeqCst);
+			self.volume.store(current.saturating_sub(10), Ordering::SeqCst);
 			self.apply_volume();
 		}
 	}
 
 	/// Get volume as float (0.0 - 1.0)
 	fn get_volume_float(&self) -> f32 {
-		self.volume.load(Ordering::SeqCst) as f32 * 0.25
+		self.volume.load(Ordering::SeqCst) as f32 / 100.0
 	}
 
 	/// Apply volume to active sink
@@ -447,7 +447,7 @@ fn get_playlist_click(x: u16, y: u16, ui_x: u16, ui_y: u16, scroll: usize, track
 	let playlist_x_start = ui_x + 3;
 	let playlist_x_end = ui_x + 60;
 	let visible = track_count.min(MAX_PLAYLIST_VISIBLE);
-	
+
 	for i in 0..visible {
 		let item_y = ui_y + PLAYLIST_START_Y + i as u16;
 		if y == item_y && x >= playlist_x_start && x < playlist_x_end {
@@ -534,7 +534,7 @@ fn run_app(terminal: &mut Terminal<CrosstermBackend<io::Stdout>>, app: &mut App)
 /// Draw the complete cassette player UI
 fn draw_ui(f: &mut Frame, app: &App) {
 	let mut lines: Vec<Line> = Vec::new();
-	
+
 	let volume = app.volume.load(Ordering::SeqCst);
 	let (elapsed, duration, progress_ratio) = if let Some(idx) = app.current_track {
 		let track = &app.tracks[idx];
@@ -576,17 +576,39 @@ fn draw_ui(f: &mut Frame, app: &App) {
 	// Dynamic playlist size
 	let playlist_visible = app.tracks.len().min(MAX_PLAYLIST_VISIBLE);
 
-	// Volume slider: knob ╞══╡ at volume level, bar ├──┤ one position above
-	// At volume 0: only bar at bottom, no knob visible
+	// Map volume percentage (0-100) to visual state (0-5)
+	// 0: Exclusive to 0% (Flat bar / Off)
+	// 1: Exclusive to 10% (Knob at absolute bottom)
+	// 2: 20-30%
+	// 3: 40-60% (Mid range)
+	// 4: 70-90% (High range)
+	// 5: Exclusive to 100% (Knob at absolute top)
+	let visual_state = match volume {
+		0 => 0,
+		1..=10 => 1,
+		11..=30 => 2,
+		31..=60 => 3,
+		61..=90 => 4,
+		_ => 5,
+	};
+
+	// Volume slider logic
 	let vol_slot = |pos: u8| -> &str {
-		if volume == 0 {
+		if visual_state == 0 {
+			// Stage 0 (0%): Flat bar at the very bottom
 			if pos == 0 { "├──┤" } else { "│  │" }
-		} else if pos == volume {
-			"╞══╡"
-		} else if pos == volume + 1 && pos <= 4 {
-			"├──┤"
 		} else {
-			"│  │"
+			// Stages 1-5: Active Knob ╞══╡
+			// Calculate knob vertical index (0 to 4)
+			let knob_pos = visual_state - 1;
+
+			if pos == knob_pos {
+				"╞══╡" // The knob itself
+			} else if pos == knob_pos + 1 && pos <= 4 {
+				"├──┤" // The bar connecting to the mechanism above
+			} else {
+				"│  │"
+			}
 		}
 	};
 
@@ -639,7 +661,7 @@ fn draw_ui(f: &mut Frame, app: &App) {
 	// Line 8: Cassette inner border + volume bottom
 	lines.push(Line::from("│      ├───┴──────────────────────────────────────┴───┤ ╰──╯ │"));
 	// Line 9: Cassette bottom + volume percentage
-	lines.push(Line::from(format!("│      ╰──────────────────────────────────────────────╯ {:>3}% │", volume * 25)));
+	lines.push(Line::from(format!("│      ╰──────────────────────────────────────────────╯ {:>3}% │", volume)));
 	// Line 10: Empty line before buttons
 	lines.push(Line::from("│                                                            │"));
 	// Line 11: Button tops
@@ -648,7 +670,7 @@ fn draw_ui(f: &mut Frame, app: &App) {
 	let play_style = if app.player_state == PlayerState::Playing { Style::default().fg(Color::Green) } else { Style::default() };
 	let pause_style = if app.player_state == PlayerState::Paused { Style::default().fg(Color::Yellow) } else { Style::default() };
 	let stop_style = if app.player_state == PlayerState::Stopped { Style::default().fg(Color::Red) } else { Style::default() };
-	
+
 	lines.push(Line::from(vec![
 		Span::raw("│      │ "),
 		Span::styled("⏮", Style::default()),
@@ -681,7 +703,7 @@ fn draw_ui(f: &mut Frame, app: &App) {
 			let track = &app.tracks[track_idx];
 			let is_current = app.current_track == Some(track_idx);
 			let is_selected = app.selected_track == track_idx;
-			
+
 			let prefix = if is_current {
 				match app.player_state {
 					PlayerState::Playing => "▶",
@@ -698,7 +720,7 @@ fn draw_ui(f: &mut Frame, app: &App) {
 			let duration_str = format!("[{}]", format_duration(track.duration_secs));
 			let num_prefix = format!("{:2}. ", track_idx + 1);
 			let name_part = format!("{} - {}", track.artist, track.title);
-			
+
 			// Content width: 46 chars to fit properly (shifted 4 left)
 			// = num_prefix(4) + name + space(1) + duration(~6)
 			let content_width = 46;
@@ -708,7 +730,7 @@ fn draw_ui(f: &mut Frame, app: &App) {
 			} else {
 				format!("{:<width$}", name_part, width = available)
 			};
-			
+
 			let content = format!("{}{} {}", num_prefix, name_display, duration_str);
 
 			let style = if is_current {

@@ -66,6 +66,7 @@ use gui::run_gui;
 use crate::logger::{log, LogLevel};
 use colored::*;
 use rfd::FileDialog;
+use glob::glob;
 
 /// Digital cassette tapes disguised as PNG images
 #[derive(Parser)]
@@ -158,7 +159,37 @@ fn main() {
 
 	match cli.command {
 		Commands::Record { image, audio_files, output } => {
-			let audio_refs: Vec<&str> = audio_files.iter().map(|s| s.as_str()).collect();
+			// Expand wildcards in audio file patterns (cross-platform)
+			let mut expanded_files = Vec::new();
+			for pattern in &audio_files {
+				// Try to expand as glob pattern
+				match glob(pattern) {
+					Ok(paths) => {
+						let mut found_any = false;
+						for entry in paths.flatten() {
+							if let Some(path_str) = entry.to_str() {
+								expanded_files.push(path_str.to_string());
+								found_any = true;
+							}
+						}
+						// If no matches found, treat as literal filename
+						if !found_any {
+							expanded_files.push(pattern.clone());
+						}
+					}
+					Err(_) => {
+						// Invalid pattern, treat as literal filename
+						expanded_files.push(pattern.clone());
+					}
+				}
+			}
+			
+			if expanded_files.is_empty() {
+				log(LogLevel::Error, "No audio files found matching the provided patterns.");
+				return;
+			}
+			
+			let audio_refs: Vec<&str> = expanded_files.iter().map(|s| s.as_str()).collect();
 			record(&image, &audio_refs, &output);
 		}
 
