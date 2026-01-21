@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Rewind.png Player</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+	<div class="main-wrapper">
+		<!-- Record Panel (Left) -->
+		<div class="record-panel side-panel">
+			<div class="panel-header">
+				<i class="fa-solid fa-circle-dot"></i>
+				<h2>Record</h2>
+			</div>
+
+			<div class="record-content">
+				<!-- File Drop Zone -->
+				<div class="file-drop-zone" id="file-drop-zone">
+					<i class="fa-solid fa-upload"></i>
+					<p>Drop audio files here<br>or click to browse</p>
+					<span class="hint">FLAC, MP3, OGG, WAV</span>
+				</div>
+				<input type="file" id="file-input" accept=".flac,.mp3,.ogg,.wav,audio/*" multiple hidden>
+
+				<!-- Uploaded Files List -->
+				<div class="file-list" id="file-list">
+					<!-- Files will be added here dynamically -->
+				</div>
+
+				<!-- Cover Art Section -->
+				<div class="cover-section">
+					<label>Cover Art</label>
+					<div class="cover-drop-zone" id="cover-drop-zone">
+						<div class="cover-preview" id="cover-preview">
+							<i class="fa-solid fa-image"></i>
+						</div>
+						<div class="cover-info">
+							<p>Drop PNG image or click</p>
+							<span class="cover-hint">This becomes the cassette shell</span>
+						</div>
+					</div>
+					<input type="file" id="cover-input" accept="image/png" hidden>
+				</div>
+
+				<!-- Record Button -->
+				<div class="record-btn-container">
+					<button class="record-btn" id="record-btn">
+						<span class="rec-dot"></span>
+						<i class="fa-solid fa-circle-dot"></i>
+						<span>Make Cassette</span>
+					</button>
+				</div>
+			</div>
+
+			<div class="panel-footer">
+				<span id="file-count">0 FILES READY</span>
+			</div>
+		</div>
+
+		<!-- Main Player -->
+		<div class="player-container">
+			<!-- Header -->
+			<div class="header">
+				<div class="logo">
+					<i class="fa-solid fa-music"></i>
+					Rewind<span>.png</span>
+				</div>
+				<div class="status-light" id="status-led"></div>
+			</div>
+
+			<!-- The Cassette Holder -->
+			<div class="cassette-holder">
+				<div class="cassette">
+					<div class="cassette-label">
+						<div class="label-stripe"></div>
+						<div class="tape-title">Mixtape_Vol_1.png</div>
+						<div class="tape-artist" style="font-family: 'Brush Script MT', cursive;">Various Artists</div>
+
+						<div class="tape-window">
+							<div class="reel left"></div>
+							<div class="reel right"></div>
+						</div>
+
+						<div class="label-stripe bottom"></div>
+					</div>
+					<div class="tape-bottom">
+						<div class="trapezoid"></div>
+						<div class="holes">
+							<div class="hole"></div>
+							<div class="hole"></div>
+						</div>
+					</div>
+				</div>
+				<div class="cassette-cover" aria-hidden="true"></div>
+			</div>
+
+			<!-- Controls -->
+			<div class="controls-area">
+				<button class="neo-btn btn-action" id="btn-prev" aria-label="Previous">
+					<i class="fa-solid fa-backward-step"></i>
+				</button>
+				<button class="neo-btn btn-action" id="btn-rewind" aria-label="Rewind">
+					<i class="fa-solid fa-backward"></i>
+				</button>
+				<button class="neo-btn btn-play" id="btn-play" aria-label="Play">
+					<i class="fa-solid fa-play"></i>
+				</button>
+				<button class="neo-btn btn-stop" id="btn-stop" aria-label="Stop">
+					<i class="fa-solid fa-stop"></i>
+				</button>
+				<button class="neo-btn btn-action" id="btn-fwd" aria-label="Fast Forward">
+					<i class="fa-solid fa-forward"></i>
+				</button>
+				<button class="neo-btn btn-action" id="btn-next" aria-label="Next">
+					<i class="fa-solid fa-forward-step"></i>
+				</button>
+			</div>
+
+			<!-- Volume -->
+			<div class="volume-container">
+				<i class="fa-solid fa-volume-low vol-label"></i>
+				<div class="vol-track">
+					<div class="vol-thumb"></div>
+				</div>
+				<i class="fa-solid fa-volume-high vol-label"></i>
+			</div>
+		</div>
+
+		<!-- Playlist Panel (Right) -->
+		<div class="playlist-panel side-panel">
+			<div class="panel-header">
+				<i class="fa-solid fa-list"></i>
+				<h2>Playlist</h2>
+			</div>
+
+			<div class="playlist-tracks">
+				<div class="track-item">
+					<div class="track-number"><span>1</span></div>
+					<div class="track-info">
+						<div class="track-title">Below The Surface</div>
+						<div class="track-artist">Griffinilla</div>
+					</div>
+					<div class="track-duration">2:14</div>
+				</div>
+
+				<div class="track-item active">
+					<div class="track-number"><span>2</span></div>
+					<div class="track-info">
+						<div class="track-title">Plage Coquillage</div>
+						<div class="track-artist">Tao mon amour</div>
+					</div>
+					<div class="track-duration">3:11</div>
+				</div>
+
+				<div class="track-item">
+					<div class="track-number"><span>3</span></div>
+					<div class="track-info">
+						<div class="track-title">Day 'n' Nite</div>
+						<div class="track-artist">Kid Cudi</div>
+					</div>
+					<div class="track-duration">2:48</div>
+				</div>
+
+				<div class="track-item">
+					<div class="track-number"><span>4</span></div>
+					<div class="track-info">
+						<div class="track-title">F1</div>
+						<div class="track-artist">Hans Zimmer</div>
+					</div>
+					<div class="track-duration">3:13</div>
+				</div>
+
+				<div class="track-item">
+					<div class="track-number"><span>5</span></div>
+					<div class="track-info">
+						<div class="track-title">Bangarang (feat. Sirah)</div>
+						<div class="track-artist">Skrillex</div>
+					</div>
+					<div class="track-duration">3:35</div>
+				</div>
+
+				<div class="track-item">
+					<div class="track-number"><span>6</span></div>
+					<div class="track-info">
+						<div class="track-title">Aquarium</div>
+						<div class="track-artist">Kevin MacLeod</div>
+					</div>
+					<div class="track-duration">4:12</div>
+				</div>
+			</div>
+
+			<div class="panel-footer">
+				<span>6 TRACKS • 19:13 TOTAL</span>
+			</div>
+		</div>
+	</div>
+
+	<script src="app.js"></script>
+</body>
+</html>
